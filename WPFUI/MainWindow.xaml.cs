@@ -22,14 +22,12 @@ namespace WPFUI
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Button clear = new Button();
+        public Button clear = new Button();
         public List<PersonModel> People = new List<PersonModel>();
         public MainWindow()
         {
             InitializeComponent();
-
-
-
+            SetClearButtonProperties();
         }
 
         private void CommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -50,29 +48,66 @@ namespace WPFUI
         private void searchButton_Click(object sender, RoutedEventArgs e)
         {
             People.Clear();
-            DataAccess dataAcccess = new DataAccess();
-            People = dataAcccess.GetPeopleByLastName(searchEntry.Text);
-
             personInfoPanel.Children.Clear();
-            foreach (PersonModel person in People)
+
+            DataAccess dataAcccess = new DataAccess();
+
+            if (string.IsNullOrEmpty(searchEntry.Text) || searchEntry.Text == "*")
             {
-                TextBlock tb = new TextBlock();
-                tb.Text = person.FullInfo;
-                personInfoPanel.Children.Add(tb);
+                GetAllPeople(ref dataAcccess, ref People);
+            }
+            else
+            {
+                People = dataAcccess.GetPeopleByLastName(searchEntry.Text);
             }
 
-            if (personInfoPanel.Children.Count > 0)
+  
+            if (People.Count == 0)
             {
-                clear.Content = "clear";
-                clear.Click += new RoutedEventHandler(clear_Click);
-                searchPanel.Children.Add(clear);
+                // display error message
+                TextBlock tb = new TextBlock();
+                tb.Text = dataAcccess.NoResultsMessage;
+                personInfoPanel.Children.Add(tb);
+
+                // remove clear button
+                if (searchPanel.Children.Contains(clear))
+                {
+                    searchPanel.Children.Remove(clear);
+                }
+
+                // dont populate clear button
             }
+            else
+            {
+                foreach (PersonModel person in People)
+                {
+                    TextBlock tb = new TextBlock();
+                    tb.Text = person.FullInfo;
+                    personInfoPanel.Children.Add(tb);
+                }
+
+                if (personInfoPanel.Children.Count > 0 && !searchPanel.Children.Contains(clear))
+                {
+                    searchPanel.Children.Add(clear);
+                }
+            }
+        }
+
+        private void GetAllPeople(ref DataAccess p_dataAccess, ref List<PersonModel> p_people)
+        {
+            p_people = p_dataAccess.GetPeople();
         }
 
         private void clear_Click(object sender, RoutedEventArgs e)
         {
             personInfoPanel.Children.Clear();
             searchPanel.Children.Remove(clear);
+        }
+
+        private void SetClearButtonProperties()
+        {
+            clear.Content = "clear";
+            clear.Click += new RoutedEventHandler(clear_Click);
         }
 
         private void searchEntry_KeyDown(object sender, KeyEventArgs e)

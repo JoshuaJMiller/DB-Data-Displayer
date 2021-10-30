@@ -11,10 +11,12 @@ namespace HelperLibrary
 {
     public class DataAccess
     {
+        public string NoResultsMessage = "No Records";
+
         public List<PersonModel> GetPeopleByLastName(string p_lastName)
         {
             // Makes a new IDbConnection based on the connection string that is returned, and closes the connection as soon as function returns
-            using(IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionHelper.getConnectionString("PersonDB")))
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionHelper.getConnectionString("PersonDB")))
             {
                 // Dapper Query method that calls stored procedure "People_GetByLastName" from SQL Server which has a parameter "@LastName" p_lastName is passed via inline object initialization (new) 
                 List<PersonModel> output = connection.Query<PersonModel>("dbo.People_GetByLastName @LastName", new { LastName = p_lastName }).ToList();
@@ -22,7 +24,13 @@ namespace HelperLibrary
             }
         }
 
-        
-
+        public List<PersonModel> GetPeople()
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionHelper.getConnectionString("PersonDB")))
+            {
+                List<PersonModel> output = connection.Query<PersonModel>("dbo.Get_All").ToList();
+                return output;
+            }
+        }
     }
 }
