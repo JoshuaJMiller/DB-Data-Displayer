@@ -1,0 +1,116 @@
+﻿<Application x:Class="WPFUI.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:WPFUI"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+      
+        <!--SOFT BUTTON-->
+        <Style TargetType="Button">
+            <Setter Property="MinWidth" Value="100" />
+            <Setter Property="MinHeight" Value="30" />
+            <Setter Property="FontFamily" Value="Segoe UI Light" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="Margin" Value="2" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" ClipToBounds="True">
+                            <!-- Inner Rectangle with rounded corners. -->
+                            <Rectangle x:Name="innerRectangle" Stroke="Transparent" StrokeThickness="0" Fill="#FF7A7A7A" RadiusX="10" RadiusY="10" />
+                            <!-- Present Content (text) of the button. -->
+                            <DockPanel Name="myContentPresenterDockPanel">
+                                <ContentPresenter x:Name="myContentPresenter" HorizontalAlignment="Center" VerticalAlignment="Center" Content="{TemplateBinding Content}" Opacity="0.75" />
+                            </DockPanel>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+
+                            <EventTrigger RoutedEvent="Mouse.MouseEnter">
+                                <EventTrigger.Actions>
+                                    <BeginStoryboard Name="mouseEnterBeginStoryboard">
+                                        <Storyboard>
+                                            <DoubleAnimation
+                                            Storyboard.TargetName="innerRectangle"
+                                            Storyboard.TargetProperty="Opacity"
+                                            From="1.0" To="0.5" Duration="0:0:0.15" 
+                                             />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger.Actions>
+                            </EventTrigger>
+                            <EventTrigger RoutedEvent="Mouse.MouseLeave">
+                                <EventTrigger.Actions>
+                                    <BeginStoryboard Name="mouseLeaveBeginStoryboard">
+                                        <Storyboard>
+                                            <DoubleAnimation
+                                            Storyboard.TargetName="innerRectangle"
+                                            Storyboard.TargetProperty="Opacity"
+                                            From="0.5" To="1" Duration="0:0:0.15" 
+                                             />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger.Actions>
+                            </EventTrigger>
+                            <EventTrigger RoutedEvent="Mouse.PreviewMouseDown">
+                                <EventTrigger.Actions>
+                                    <BeginStoryboard Name="mouseClickStoryboard">
+                                        <Storyboard>
+                                            <DoubleAnimation
+                                            Storyboard.TargetName="myContentPresenter"
+                                            Storyboard.TargetProperty="Opacity"
+                                            From="0.75" To="1" Duration="0:0:0.15"
+                                                AutoReverse="True"
+                                             />
+                                            <DoubleAnimation
+                                            Storyboard.TargetName="innerRectangle"
+                                            Storyboard.TargetProperty="Opacity"
+                                            From="0.5" To="0.25" Duration="0:0:0.1"
+                                            AutoReverse="True"
+                                             />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger.Actions>
+                            </EventTrigger>
+
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!--SOFT TEXTBOX-->
+        <Style TargetType="{x:Type TextBox}">
+            <Setter Property="MinWidth" Value="100" />
+            <Setter Property="MinHeight" Value="30" />
+            <Setter Property="FontFamily" Value="Segoe UI Light" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Margin" Value="2" />
+            <Setter Property="Padding" Value="2" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border Background="{TemplateBinding Background}" 
+                                x:Name="Bd" BorderBrush="Black"
+                                BorderThickness="0" CornerRadius="10">
+                            <ScrollViewer x:Name="PART_ContentHost"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" TargetName="Bd"/>
+                                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                            </Trigger>
+                            <Trigger Property="Width" Value="Auto">
+                                <Setter Property="MinWidth" Value="100"/>
+                            </Trigger>
+                            <Trigger Property="Height" Value="Auto">
+                                <Setter Property="MinHeight" Value="20"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </Application.Resources>
+</Application>
