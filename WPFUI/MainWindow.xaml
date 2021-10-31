@@ -159,6 +159,13 @@
             <Style x:Key="MinimizeButtonStyle" TargetType="Button" BasedOn="{StaticResource captionButtonStyle}">
                 <Setter Property="Content" Value="&#xE949;" />
             </Style>
+
+            <DataTemplate x:Key="header">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="roory" />
+                    <TextBlock Text="roofy" />
+                </StackPanel>
+            </DataTemplate>
             
         </ResourceDictionary>        
     </Window.Resources>

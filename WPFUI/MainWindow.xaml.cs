@@ -24,10 +24,32 @@ namespace WPFUI
     {
         public Button clear = new Button();
         public List<PersonModel> People = new List<PersonModel>();
+        public StackPanel header = new StackPanel();
+
+        public void SetHeader()
+        {
+            TextBlock idBlock = new TextBlock();
+            TextBlock firstNameBlock = new TextBlock();
+            TextBlock lastNameBlock = new TextBlock();
+
+            idBlock.Text = "ID:";
+            firstNameBlock.Text = "First Name:";
+            lastNameBlock.Text = "Last Name:";
+
+            header.Orientation = Orientation.Horizontal;
+            header.HorizontalAlignment = HorizontalAlignment.Center;
+
+            header.Children.Add(idBlock);
+            header.Children.Add(firstNameBlock);
+            header.Children.Add(lastNameBlock);
+
+        }
+
         public MainWindow()
         {
             InitializeComponent();
             SetClearButtonProperties();
+            SetHeader();
         }
 
         private void CommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -79,6 +101,8 @@ namespace WPFUI
             }
             else
             {
+                // insert header
+                personInfoPanel.Children.Add(header);
                 foreach (PersonModel person in People)
                 {
                     TextBlock tb = new TextBlock();
