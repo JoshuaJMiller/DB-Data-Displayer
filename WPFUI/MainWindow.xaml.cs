@@ -25,12 +25,17 @@ namespace WPFUI
         public Button clear = new Button();
         public List<PersonModel> People = new List<PersonModel>();
         public StackPanel header = new StackPanel();
+        public string NoResultsMessage = "No results for: ";
 
         public void SetHeader()
         {
             TextBlock idBlock = new TextBlock();
             TextBlock firstNameBlock = new TextBlock();
             TextBlock lastNameBlock = new TextBlock();
+
+            idBlock.Margin = new Thickness(20,5,20,5);
+            firstNameBlock.Margin = new Thickness(20, 5, 20, 5);
+            lastNameBlock.Margin = new Thickness(20, 5, 20, 5);
 
             idBlock.Text = "ID:";
             firstNameBlock.Text = "First Name:";
@@ -76,11 +81,18 @@ namespace WPFUI
 
             if (string.IsNullOrEmpty(searchEntry.Text) || searchEntry.Text == "*")
             {
-                GetAllPeople(ref dataAcccess, ref People);
+                if (MessageBox.Show("Display all Person information from databse?", "Display all", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                {
+                    GetAllPeople(ref dataAcccess, ref People);
+                }
+                else
+                {
+                    return;
+                }
             }
             else
             {
-                People = dataAcccess.GetPeopleByLastName(searchEntry.Text);
+                People = dataAcccess.GetPeopleByAnyValue(searchEntry.Text);
             }
 
   
@@ -88,7 +100,7 @@ namespace WPFUI
             {
                 // display error message
                 TextBlock tb = new TextBlock();
-                tb.Text = dataAcccess.NoResultsMessage;
+                tb.Text = NoResultsMessage + $"\"{searchEntry.Text}\"";
                 personInfoPanel.Children.Add(tb);
 
                 // remove clear button
@@ -126,6 +138,7 @@ namespace WPFUI
         {
             personInfoPanel.Children.Clear();
             searchPanel.Children.Remove(clear);
+            searchEntry.Text = "";
         }
 
         private void SetClearButtonProperties()
@@ -139,6 +152,19 @@ namespace WPFUI
             if (e.Key == Key.Return)
             {
                 searchButton_Click(sender, e);
+            }
+        }
+
+        private void insertButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (MessageBox.Show($"Write the following to the database: \nFirst Name: {firstNameEntry.Text}\nLast Name: {lastNameEntry.Text}\nEmail Address: {emailEntry.Text}\nPhone Number: {phoneNumberEntry.Text}", "Write to database", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                DataAccess da = new DataAccess();
+                da.InsertPerson(firstNameEntry.Text, lastNameEntry.Text, emailEntry.Text, phoneNumberEntry.Text);
+                firstNameEntry.Text = "";
+                lastNameEntry.Text = "";
+                emailEntry.Text = "";
+                phoneNumberEntry.Text = "";
             }
         }
     }

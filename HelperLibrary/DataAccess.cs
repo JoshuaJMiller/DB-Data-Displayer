@@ -11,8 +11,6 @@ namespace HelperLibrary
 {
     public class DataAccess
     {
-        public string NoResultsMessage = "No Records";
-
         public List<PersonModel> GetPeopleByLastName(string p_lastName)
         {
             // Makes a new IDbConnection based on the connection string that is returned, and closes the connection as soon as function returns
@@ -30,6 +28,24 @@ namespace HelperLibrary
             {
                 List<PersonModel> output = connection.Query<PersonModel>("dbo.Get_All").ToList();
                 return output;
+            }
+        }
+
+        public List<PersonModel> GetPeopleByAnyValue(string p_value)
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionHelper.getConnectionString("PersonDB")))
+            {
+                List<PersonModel> people = connection.Query<PersonModel>("dbo.People_GetByAnyValue @AnyValue", new { AnyValue = p_value }).ToList();
+                return people;
+            }
+        }
+
+        public void InsertPerson(string p_firstName = "", string p_lastName = "", string p_emailAddress = "", string p_phoneNumber = "")
+        {
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(ConnectionHelper.getConnectionString("PersonDB")))
+            {
+                PersonModel person = new PersonModel { FirstName = p_firstName, LastName = p_lastName, EmailAddress = p_emailAddress, PhoneNumber = p_phoneNumber };
+                connection.Execute("dbo.People_Insert @FirstName, @LastName, @EmailAddress, @PhoneNumber", person);
             }
         }
     }
