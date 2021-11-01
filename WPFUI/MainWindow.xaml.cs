@@ -24,29 +24,37 @@ namespace WPFUI
     {
         public Button clear = new Button();
         public List<PersonModel> People = new List<PersonModel>();
-        public StackPanel header = new StackPanel();
+        public List<string> HeaderInfo = new List<string> { "Id:", "First Name:", "Last Name:", "Email Address:", "Phone Number:" };
         public string NoResultsMessage = "No results for: ";
+        public PersonModel Header = new PersonModel();
+        public List<StackPanel> defaultHeader = new List<StackPanel>();
 
-        public void SetHeader()
+        public List<StackPanel> InitDisplayGrid()
         {
-            TextBlock idBlock = new TextBlock();
-            TextBlock firstNameBlock = new TextBlock();
-            TextBlock lastNameBlock = new TextBlock();
+            List<StackPanel> Columns = new List<StackPanel>();
+            personInfoPanel.Orientation = Orientation.Horizontal;
 
-            idBlock.Margin = new Thickness(20,5,20,5);
-            firstNameBlock.Margin = new Thickness(20, 5, 20, 5);
-            lastNameBlock.Margin = new Thickness(20, 5, 20, 5);
+            // make as many columns as header titles exist
+            for (int i = 0; i < HeaderInfo.Count; ++i)
+            {
+                StackPanel column = new StackPanel();
+                column.Orientation = Orientation.Vertical;
+                column.Margin = new Thickness(5, 0, 5, 0);
+                Columns.Add(column);
+            }
 
-            idBlock.Text = "ID:";
-            firstNameBlock.Text = "First Name:";
-            lastNameBlock.Text = "Last Name:";
+            // put a block with each header title into each column
+            for (int i = 0; i < HeaderInfo.Count; ++i)
+            {
+                TextBlock block = new TextBlock();
+                block.FontFamily = new FontFamily("Segoe UI");
+                block.FontWeight = FontWeights.Bold;
+                block.Margin = new Thickness(0,5,0,5);
+                block.Text = HeaderInfo[i];
+                Columns[i].Children.Add(block);
+            }
 
-            header.Orientation = Orientation.Horizontal;
-            header.HorizontalAlignment = HorizontalAlignment.Center;
-
-            header.Children.Add(idBlock);
-            header.Children.Add(firstNameBlock);
-            header.Children.Add(lastNameBlock);
+            return Columns;
 
         }
 
@@ -54,7 +62,7 @@ namespace WPFUI
         {
             InitializeComponent();
             SetClearButtonProperties();
-            SetHeader();
+            defaultHeader = InitDisplayGrid();
         }
 
         private void CommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -75,13 +83,13 @@ namespace WPFUI
         private void searchButton_Click(object sender, RoutedEventArgs e)
         {
             People.Clear();
-            personInfoPanel.Children.Clear();
+            ResetDisplayGrid();
 
             DataAccess dataAcccess = new DataAccess();
 
             if (string.IsNullOrEmpty(searchEntry.Text) || searchEntry.Text == "*")
             {
-                if (MessageBox.Show("Display all Person information from databse?", "Display all", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                if (MessageBox.Show("Display all Person information from databse?", "Display all", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
                     GetAllPeople(ref dataAcccess, ref People);
                 }
@@ -113,18 +121,75 @@ namespace WPFUI
             }
             else
             {
-                // insert header
-                personInfoPanel.Children.Add(header);
-                foreach (PersonModel person in People)
-                {
-                    TextBlock tb = new TextBlock();
-                    tb.Text = person.FullInfo;
-                    personInfoPanel.Children.Add(tb);
-                }
+                FillPersonInfoPanel();
 
                 if (personInfoPanel.Children.Count > 0 && !searchPanel.Children.Contains(clear))
                 {
                     searchPanel.Children.Add(clear);
+                }
+            }
+        }
+
+        private void FillPersonInfoPanel()
+        {
+            // fill column info
+            FillInfoColumns(defaultHeader[0], ref People, "Id");
+            FillInfoColumns(defaultHeader[1], ref People, "FirstName");
+            FillInfoColumns(defaultHeader[2], ref People, "LastName");
+            FillInfoColumns(defaultHeader[3], ref People, "EmailAddress");
+            FillInfoColumns(defaultHeader[4], ref People, "PhoneNumber");
+
+            foreach (StackPanel column in defaultHeader)
+            {
+                personInfoPanel.Children.Add(column);
+            }
+        }
+
+        private void FillInfoColumns(StackPanel p_column, ref List<PersonModel> p_people, string p_memberKey)
+        {
+            if (p_memberKey == "Id")
+            {
+                foreach (PersonModel person in p_people)
+                {
+                    TextBlock info = new TextBlock();
+                    info.Text = person.Id.ToString();
+                    p_column.Children.Add(info);
+                }
+            }
+            else if (p_memberKey == "FirstName")
+            {
+                foreach (PersonModel person in p_people)
+                {
+                    TextBlock info = new TextBlock();
+                    info.Text = person.FirstName;
+                    p_column.Children.Add(info);
+                }
+            }
+            else if (p_memberKey == "LastName")
+            {
+                foreach (PersonModel person in p_people)
+                {
+                    TextBlock info = new TextBlock();
+                    info.Text = person.LastName;
+                    p_column.Children.Add(info);
+                }
+            }
+            else if (p_memberKey == "EmailAddress")
+            {
+                foreach (PersonModel person in p_people)
+                {
+                    TextBlock info = new TextBlock();
+                    info.Text = person.EmailAddress;
+                    p_column.Children.Add(info);
+                }
+            }
+            else if (p_memberKey == "PhoneNumber")
+            {
+                foreach (PersonModel person in p_people)
+                {
+                    TextBlock info = new TextBlock();
+                    info.Text = person.PhoneNumber;
+                    p_column.Children.Add(info);
                 }
             }
         }
@@ -136,9 +201,15 @@ namespace WPFUI
 
         private void clear_Click(object sender, RoutedEventArgs e)
         {
-            personInfoPanel.Children.Clear();
+            ResetDisplayGrid();
             searchPanel.Children.Remove(clear);
             searchEntry.Text = "";
+        }
+
+        private void ResetDisplayGrid()
+        {
+            personInfoPanel.Children.Clear();
+            defaultHeader = InitDisplayGrid();
         }
 
         private void SetClearButtonProperties()
