@@ -1,4 +1,4 @@
-# DB Data Control
+# DB Data Displayer
 Visually insert or search data in sample SQL Server
 
 ## Description
