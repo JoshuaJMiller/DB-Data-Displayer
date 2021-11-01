@@ -84,7 +84,7 @@
 
                     <Border Background="Transparent" />
 
-                    <Track x:Name="PART_Track" Grid.Row="1" IsDirectionReversed="true">
+                    <Track x:Name="PART_Track" Grid.Row="1" IsDirectionReversed="False">
                         <Track.Thumb>
                             <Thumb Style="{StaticResource ScrollBarThumb}" Margin="1,0,1,0" Background="#FF282828" Opacity="0.95" Height="8" />
                         </Track.Thumb>
@@ -184,7 +184,7 @@
         <!--WINDOW CHROME-->
         <Grid Grid.Row="0" Height="30" Background="#FF282828" Opacity="0.95">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                <TextBlock Text="Personal DB" Foreground="White" Margin="10,0,0,0" FontSize="14" />
+                <TextBlock Text="DB Data Diplayer" Foreground="White" Margin="10,0,0,0" FontSize="14" />
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
                 <Button Style="{StaticResource MinimizeButtonStyle}" WindowChrome.IsHitTestVisibleInChrome="True" 
@@ -213,6 +213,7 @@
 
             <!--SEARCH PANEL-->
             <WrapPanel x:Name="searchPanel" Grid.Column="0"  Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,10,0,0">
+                <TextBlock HorizontalAlignment="Center" Margin="0,0,0,44" FontSize="26" Text="SEARCH" />
                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14"
                     Text="Look-up:" />
                 <TextBox x:Name="searchEntry" Width="150" FontSize="18" KeyDown="searchEntry_KeyDown" />
@@ -230,7 +231,7 @@
                 </Grid.RowDefinitions>
                 <Border Grid.Row="0" Background="Black" />
 
-                <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center"
+                <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22"
                     Text="Person Info From Database" />
 
                 <ScrollViewer x:Name="personInfo" Grid.Row="11" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
@@ -242,19 +243,21 @@
             </Grid>
             
             <!--INSERT PANEL-->
+            
             <WrapPanel x:Name="insertPanel" Grid.Column="2"  Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,10,0,0">
+                <TextBlock HorizontalAlignment="Center" Margin="0,0,0,44" FontSize="26" Text="INSERT" />
                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14"
                     Text="First Name:" />
-                <TextBox x:Name="firstNameEntry" Width="150" FontSize="18" />
+                <TextBox x:Name="firstNameEntry" Width="150" FontSize="18" KeyDown="firstNameEntry_KeyDown" />
                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14"
                     Text="Last Name:" />
-                <TextBox x:Name="lastNameEntry" Width="150" FontSize="18" />
+                <TextBox x:Name="lastNameEntry" Width="150" FontSize="18" KeyDown="lastNameEntry_KeyDown" />
                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14"
                     Text="Email:" />
-                <TextBox x:Name="emailEntry" Width="150" FontSize="18" />
+                <TextBox x:Name="emailEntry" Width="150" FontSize="18" KeyDown="emailEntry_KeyDown" />
                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14"
                     Text="Phone Number:" />
-                <TextBox x:Name="phoneNumberEntry" Width="150" FontSize="18" />
+                <TextBox x:Name="phoneNumberEntry" Width="150" FontSize="18" KeyDown="phoneNumberEntry_KeyDown" />
                 <Button x:Name="insertButton" Content="insert" Margin="0,18,0,0" Click="insertButton_Click" />
             </WrapPanel>
 

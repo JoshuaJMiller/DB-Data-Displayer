@@ -238,5 +238,37 @@ namespace WPFUI
                 phoneNumberEntry.Text = "";
             }
         }
+
+        private void firstNameEntry_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                insertButton_Click(sender, e);
+            }
+        }
+
+        private void lastNameEntry_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                insertButton_Click(sender, e);
+            }
+        }
+
+        private void emailEntry_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                insertButton_Click(sender, e);
+            }
+        }
+
+        private void phoneNumberEntry_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                insertButton_Click(sender, e);
+            }
+        }
     }
 }
